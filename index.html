@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>干 嘛 ?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f0f0;     /* 浅灰米色背景 */
+            --text-color: #1a1a1a;   /* 炭黑色文字 */
+            --accent-color: #ff3b30; /* 国际红，作为点缀 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Space Mono', 'Noto Sans SC', monospace;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* 禁止滚动 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 背景纹理 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 巨大的 “干 嘛” 文字 */
+        .title-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            margin-bottom: -25px; /* 调整重叠度 */
+            pointer-events: none; 
+        }
+
+        .big-text {
+            font-size: 18vw; /* 稍微缩小文字，平衡比例 */
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            white-space: nowrap;
+            cursor: default;
+            position: relative;
+            display: inline-block;
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: multiply; 
+            pointer-events: auto;
+        }
+
+        .big-text span {
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        .big-text:hover span {
+            color: var(--accent-color);
+            transform: translateY(-10px) skewX(-5deg);
+        }
+
+        .question-mark {
+            position: absolute;
+            top: -10%;
+            right: -8%;
+            font-size: 6vw;
+            color: var(--accent-color);
+            opacity: 0;
+            transform: rotate(20deg);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .title-container:hover .question-mark {
+            opacity: 1;
+            top: -20%;
+            right: -12%;
+        }
+
+        /* 图片容器：尺寸修正版 */
+        .cat-container {
+            position: relative;
+            z-index: 5;
+            padding: 10px 10px 30px 10px; /* 拍立得白边 */
+            border: 1px solid #ddd;
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08); /* 阴影也稍微收敛一点 */
+            transition: transform 0.2s ease-out, box-shadow 0.3s ease;
+            transform: rotate(-2deg);
+            
+            /* 关键修改：严格限制宽度 */
+            width: 220px; 
+            height: auto;
+        }
+
+        .cat-container:hover {
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            z-index: 11;
+            transform: rotate(0deg) scale(1.02); /* 悬停时摆正并微放大 */
+        }
+
+        .cat-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(20%) contrast(110%); 
+        }
+
+        /* 右下角版权信息 (恢复) */
+        .corner-text {
+            position: absolute;
+            font-size: 12px;
+            color: #999;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 1px;
+            pointer-events: none;
+            user-select: none;
+        }
+        .btm-right { 
+            bottom: 30px; 
+            right: 30px; 
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .big-text { font-size: 22vw; margin-bottom: -15px; }
+            .cat-container { width: 160px; /* 手机上再小一点 */ }
+            .btm-right { bottom: 20px; right: 20px; font-size: 10px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="title-container">
+        <h1 class="big-text" id="main-title">
+            <span>干</span>
+            <span>嘛</span>
+        </h1>
+        <div class="question-mark">?</div>
+    </div>
+
+    <div class="cat-container">
+        <!-- 确保图片文件名正确 -->
+        <img src="2509541798.jpeg" alt="干嘛猫" class="cat-image">
+    </div>
+
+    <!-- 恢复右下角文字 -->
+    <div class="corner-text btm-right">© JAYCHOUHH DESIGN</div>
+
+    <script>
+        const catContainer = document.querySelector('.cat-container');
+        const title = document.querySelector('.big-text');
+
+        document.addEventListener('mousemove', (e) => {
+            // 减弱移动幅度，防止页面晃动太厉害
+            const x = (window.innerWidth / 2 - e.pageX) / 60;
+            const y = (window.innerHeight / 2 - e.pageY) / 60;
+
+            catContainer.style.transform = `rotate(-2deg) translate(${x}px, ${y}px)`;
+            title.style.transform = `translate(${-x/2}px, ${-y/2}px)`;
+        });
+        
+        document.addEventListener('mouseleave', () => {
+             catContainer.style.transform = `rotate(-2deg) translate(0, 0)`;
+             title.style.transform = `translate(0, 0)`;
+        });
+    </script>
+</body>
+</html>
